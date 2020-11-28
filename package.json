@@ -20,8 +20,15 @@
   },
   "homepage": "https://github.com/simoneromano96/graphql-todo-backend/blob/main/README.md",
   "dependencies": {
+    "@nexus/schema": "^0.19.2",
+    "fastify": "^3.8.0",
+    "graphql-iso-date": "^3.6.1",
+    "mercurius": "^6.4.0",
+    "mongoose": "^5.10.17"
   },
   "devDependencies": {
+    "@types/graphql-iso-date": "^3.4.0",
+    "@types/mongoose": "^5.10.1",
     "@typescript-eslint/eslint-plugin": "^4.8.1",
     "@typescript-eslint/parser": "^4.8.1",
     "eslint": "^7.14.0",

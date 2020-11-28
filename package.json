@@ -1,0 +1,35 @@
+{
+  "name": "graphql-todo",
+  "version": "0.0.0",
+  "description": "GraphQL Todo backend",
+  "main": "./src/index.ts",
+  "scripts": {
+    "dev": "ts-node-dev --transpile-only --no-notify ./src/index.ts",
+    "start": "node ./dist/index.js",
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/simoneromano96/graphql-todo-backend.git"
+  },
+  "author": "Simone Romano",
+  "license": "The Unlicense",
+  "bugs": {
+    "url": "https://github.com/simoneromano96/graphql-todo-backend/issues"
+  },
+  "homepage": "https://github.com/simoneromano96/graphql-todo-backend/blob/main/README.md",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.8.1",
+    "@typescript-eslint/parser": "^4.8.1",
+    "eslint": "^7.14.0",
+    "eslint-config-prettier": "^6.15.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "prettier": "^2.2.0",
+    "ts-node": "^9.0.0",
+    "ts-node-dev": "^1.0.0",
+    "typescript": "^4.1.2"
+  }
+}

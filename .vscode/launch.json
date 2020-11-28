@@ -5,7 +5,7 @@
   "version": "0.2.0",
   "configurations": [
       {
-          "name": "Launch server.js via nodemon",
+          "name": "[GraphQL TODO Server] Debug",
           "type": "node",
           "request": "launch",
           "runtimeExecutable": "ts-node-dev",

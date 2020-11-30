@@ -1,6 +1,6 @@
 import { booleanArg, extendType, list, nonNull, objectType, stringArg, subscriptionField } from "@nexus/schema"
 
-import { todoModel } from "../models/todo"
+import { todoModel, Todo as TodoInterface } from "../models/todo"
 
 const Todo = objectType({
   name: "Todo",
@@ -83,10 +83,8 @@ const TodoMutation = extendType({
 const TodoSubscription = subscriptionField("Tod", {
   type: nonNull(Todo),
   description: "React to a Todo mutation",
-  subscribe: async (_root, _args, { pubsub }) => {
-    return await pubsub.subscribe("TODO_CHANGED")
-  },
-  resolve: async (payload) => payload,
+  subscribe: async (_root, _args, { pubsub }) => await pubsub.subscribe("TODO_CHANGED"),
+  resolve: async (payload: TodoInterface) => payload,
 })
 
 export { TodoQuery, TodoMutation, TodoSubscription }

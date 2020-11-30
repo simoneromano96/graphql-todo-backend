@@ -22,4 +22,4 @@ const todoSchema = new Schema(
 
 const todoModel = model<TodoDocument>("Todo", todoSchema)
 
-export { todoModel }
+export { Todo, todoModel }

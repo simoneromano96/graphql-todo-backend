@@ -3,12 +3,13 @@ import mongoose from "mongoose"
 import mercurius from "mercurius"
 
 import { schema } from "./schema"
+import config from "./config"
 
 const main = async () => {
   // DEBUG mode, this will show the queries to the db
   mongoose.set("debug", true)
 
-  await mongoose.connect("mongodb://root:example@localhost", {
+  await mongoose.connect(config.app.db, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
@@ -22,7 +23,7 @@ const main = async () => {
     graphiql: "playground",
   })
 
-  await app.listen(3000, "0.0.0.0")
+  await app.listen(config.app.port, "0.0.0.0")
 }
 
 main()

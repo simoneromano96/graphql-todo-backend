@@ -2,10 +2,6 @@
 kind: pipeline
 name: app
 
-trigger:
-  event:
-    - tag
-
 steps:
   - name: build
     image: plugins/docker

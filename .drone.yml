@@ -8,8 +8,8 @@ steps:
     settings:
       registry: ghcr.io
       username: simoneromano96
-      # password: 
-      #   from_secret: token
+      password: 
+        from_secret: token
       repo: ghcr.io/simoneromano96/graphql-todo/backend
       context: .
       dockerfile: ./.docker/app.dockerfile

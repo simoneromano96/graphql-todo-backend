@@ -2,7 +2,9 @@ version: '3.6'
 
 services:
   app:
-    image: ghcr.io/simoneromano96/graphql-todo/backend
+    build: 
+      context: .
+      dockerfile: ./.docker/app.dockerfile
     environment: 
       APP_DB: mongodb://root:example@mongo
     ports: 

@@ -1,4 +1,5 @@
 import Fastify from "fastify"
+import cors from "fastify-cors"
 import mongoose from "mongoose"
 import mercurius from "mercurius"
 
@@ -16,6 +17,10 @@ const main = async () => {
   })
 
   const app = Fastify()
+
+  app.register(cors, {
+    origin: config.cors.origin,
+  })
 
   app.register(mercurius, {
     schema,

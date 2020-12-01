@@ -22,6 +22,7 @@
   "dependencies": {
     "@nexus/schema": "^0.19.2",
     "fastify": "^3.8.0",
+    "fastify-cors": "^5.0.0",
     "graphql-scalars": "^1.5.0",
     "mercurius": "^6.4.0",
     "mongoose": "^5.10.17"

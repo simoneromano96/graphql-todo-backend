@@ -77,6 +77,21 @@ const TodoMutation = extendType({
         return toEdit
       },
     })
+    t.field("deleteTodo", {
+      type: "String",
+      description: "Deletes a todo",
+      args: {
+        id: nonNull(stringArg({ description: "The ID of the Todo to delete" })),
+      },
+      resolve: async (_root, { id }, { pubsub }) => {
+        let toRemove = await todoModel.findById(id)
+        if (toRemove === null) {
+          throw new Error(`Todo with id ${id} not found`)
+        }
+        toRemove = await toRemove.deleteOne()
+        return "Removed todo successfully"
+      },
+    })
   },
 })
 

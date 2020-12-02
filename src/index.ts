@@ -26,6 +26,7 @@ const main = async () => {
     schema,
     subscription: true,
     graphiql: "playground",
+    prefix: config.app.apiPrefix,
   })
 
   await app.listen(config.app.port, "0.0.0.0")

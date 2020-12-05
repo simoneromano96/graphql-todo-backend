@@ -1,6 +1,22 @@
-import { booleanArg, extendType, list, nonNull, objectType, stringArg, subscriptionField } from "@nexus/schema"
+import {
+  arg,
+  booleanArg,
+  enumType,
+  extendType,
+  list,
+  nonNull,
+  objectType,
+  stringArg,
+  subscriptionField,
+} from "@nexus/schema"
 
 import { todoModel, Todo as TodoInterface } from "../models/todo"
+
+const completitionStatuses = enumType({
+  name: "Completition Status",
+  members: ["NOT_COMPLETED", "IN_PROGRESS", "COMPLETED"],
+  description: "A list of possible completition statuses",
+})
 
 const Todo = objectType({
   name: "Todo",
@@ -11,6 +27,10 @@ const Todo = objectType({
     t.boolean("completed", { description: "If the todo has been completed" })
     t.field("createdAt", { type: "DateTime", description: "When the Todo has been created" })
     t.field("updatedAt", { type: "DateTime", description: "When the Todo has been updated" })
+    t.field("completitionStatus", {
+      type: completitionStatuses,
+      description: "The current completition status of the Todo",
+    })
     // t.dateTime("createdAt"),
     // t.dateTime("updatedAt"),
   },
@@ -57,8 +77,9 @@ const TodoMutation = extendType({
         id: nonNull(stringArg({ description: "The ID of the Todo to edit" })),
         description: stringArg({ description: "The new description of the edited todo" }),
         completed: booleanArg({ description: "The new completed status of the edited todo" }),
+        completitionStatus: arg({ type: completitionStatuses, description: "The new completition status" }),
       },
-      resolve: async (_root, { id, description, completed }, { pubsub }) => {
+      resolve: async (_root, { id, description, completed, completitionStatus }, { pubsub }) => {
         let toEdit = await todoModel.findById(id)
         if (toEdit === null) {
           throw new Error(`Todo with id ${id} not found`)
@@ -68,6 +89,9 @@ const TodoMutation = extendType({
         }
         if (completed !== null && completed !== undefined) {
           toEdit.completed = completed
+        }
+        if (completitionStatus !== null && completitionStatus !== undefined) {
+          toEdit.completitionStatus = completitionStatus
         }
         toEdit = await toEdit.save()
         await pubsub.publish({

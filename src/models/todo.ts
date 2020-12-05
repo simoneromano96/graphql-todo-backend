@@ -25,7 +25,7 @@ const todoSchema = new Schema(
     },
     completitionStatus: {
       type: String,
-      default: 0,
+      default: CompletitionStatus.NOT_COMPLETED,
       enum: ["NOT_COMPLETED", "IN_PROGRESS", "COMPLETED"],
     },
   },

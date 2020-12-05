@@ -14,11 +14,7 @@ import { todoModel, Todo as TodoInterface } from "../models/todo"
 
 const completitionStatuses = enumType({
   name: "CompletitionStatus",
-  members: {
-    NOT_COMPLETED: 0,
-    IN_PROGRESS: 1,
-    COMPLETED: 2,
-  },
+  members: ["NOT_COMPLETED", "IN_PROGRESS", "COMPLETED"],
   description: "A list of possible completition statuses",
 })
 

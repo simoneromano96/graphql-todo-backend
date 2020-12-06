@@ -21,13 +21,18 @@
   "homepage": "https://github.com/simoneromano96/graphql-todo-backend/blob/main/README.md",
   "dependencies": {
     "@nexus/schema": "^0.19.2",
+    "connect-redis": "^5.0.0",
     "fastify": "3.8.0",
+    "fastify-cookie": "^4.1.1",
     "fastify-cors": "^5.0.0",
+    "fastify-session": "^5.2.1",
     "graphql-scalars": "^1.5.0",
     "mercurius": "^6.4.0",
-    "mongoose": "^5.10.17"
+    "mongoose": "^5.10.17",
+    "redis": "^3.0.2"
   },
   "devDependencies": {
+    "@types/connect-redis": "^0.0.15",
     "@types/mongoose": "^5.10.1",
     "@types/ws": "^7.4.0",
     "@typescript-eslint/eslint-plugin": "^4.8.1",

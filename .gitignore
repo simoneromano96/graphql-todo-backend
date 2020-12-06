@@ -101,4 +101,4 @@ dist
 .tern-port
 
 # generated schema
-/generated
+*/**/generated

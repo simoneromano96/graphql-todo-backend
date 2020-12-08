@@ -18,7 +18,11 @@ interface TodoDocument extends Todo, Document {}
 
 const todoSchema = new Schema(
   {
-    description: String,
+    description: {
+      type: String,
+      required: true,
+      validate: (value: string) => value.length > 0,
+    },
     completed: {
       type: Boolean,
       default: false,
@@ -35,4 +39,4 @@ const todoSchema = new Schema(
 
 const todoModel = model<TodoDocument>("Todo", todoSchema)
 
-export { Todo, todoModel, CompletitionStatus }
+export { Todo, todoModel, CompletitionStatus, todoSchema }

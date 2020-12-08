@@ -38,7 +38,7 @@ steps:
       - docker-compose pull api && docker-compose stop api && docker-compose rm -f api && docker-compose up api
 
 depends_on:
-  - api
+  - build
 
 trigger:
   event:

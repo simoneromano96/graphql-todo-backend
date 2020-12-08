@@ -28,6 +28,8 @@ server:
     from_secret: host
   user:
     from_secret: user
+  port:
+    from_secret: port
   ssh_key:
     from_secret: ssh_key
 

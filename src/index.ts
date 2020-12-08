@@ -4,7 +4,7 @@ import cors from "fastify-cors"
 import fastifyCookie from "fastify-cookie"
 import fastifySession from "fastify-session"
 import connectRedis from "connect-redis"
-import redis from "redis"
+import Redis from "ioredis"
 
 import mercurius from "mercurius"
 import mongoose from "mongoose"
@@ -12,11 +12,11 @@ import mongoose from "mongoose"
 import { schema } from "./schema"
 import config from "./config"
 
-const redisClient = redis.createClient()
-
-const RedisStore = connectRedis(fastifySession as any)
-
 const main = async () => {
+  // Init redis
+  const RedisClient = new Redis()
+  const RedisStore = connectRedis(fastifySession as any)
+
   // DEBUG mode, this will show the queries to the db
   mongoose.set("debug", true)
 
@@ -38,7 +38,7 @@ const main = async () => {
     store: new RedisStore({
       host: "localhost",
       port: 6379,
-      client: redisClient,
+      client: RedisClient,
       ttl: 600,
     }),
     cookieName: "sesId",

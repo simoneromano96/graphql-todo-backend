@@ -27,9 +27,9 @@
     "fastify-cors": "^5.0.0",
     "fastify-session": "^5.2.1",
     "graphql-scalars": "^1.5.0",
+    "ioredis": "^4.19.2",
     "mercurius": "^6.4.0",
-    "mongoose": "^5.10.17",
-    "redis": "^3.0.2"
+    "mongoose": "^5.10.17"
   },
   "devDependencies": {
     "@types/connect-redis": "^0.0.15",

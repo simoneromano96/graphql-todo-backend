@@ -29,24 +29,23 @@ const main = async () => {
   const app = Fastify()
 
   app.register(cors, {
-    origin: config.cors.origin,
+    origin: config.app.cors.origin,
   })
 
   app.register(fastifyCookie)
   app.register(fastifySession, {
     secret: config.app.session.secret,
     store: new RedisStore({
-      host: "localhost",
-      port: 6379,
+      host: config.app.redis.host,
+      port: config.app.redis.port,
       client: RedisClient,
       ttl: 600,
     }),
     cookieName: "sesId",
     cookie: {
-      secure: false,
-      httpOnly: false,
-      domain: "localhost",
-      path: "/",
+      secure: config.app.cookie.secure,
+      httpOnly: config.app.cookie.httpOnly,
+      domain: config.app.cookie.domain,
     },
   })
 

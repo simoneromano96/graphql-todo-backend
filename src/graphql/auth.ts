@@ -26,7 +26,7 @@ const signupMutation = mutationField("signup", {
     password: nonNull(stringArg({ description: "The new user's password" })),
   },
   resolve: async (_root, { username, password }, { request }) => {
-    const hashed = await hash(password, config.hash)
+    const hashed = await hash(password, config.app.hash)
     const newUser = new userModel({ username, password: hashed })
     // User on the DB
     const user = await newUser.save()
@@ -48,7 +48,7 @@ const loginMutation = mutationField("login", {
       throw new Error(`User with username: ${username} not found`)
     }
     const hashed = user.password
-    const valid = await verify(hashed, password, config.hash)
+    const valid = await verify(hashed, password, config.app.hash)
     if (!valid) {
       throw new Error("Wrong password")
     }

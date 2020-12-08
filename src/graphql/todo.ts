@@ -10,10 +10,11 @@ import {
   subscriptionField,
 } from "@nexus/schema"
 
-import { todoModel, Todo as TodoInterface, CompletitionStatus } from "../models/todo"
+import { todoModel, CompletitionStatus } from "../models/todo"
 
 const completitionStatuses = enumType({
   name: "CompletitionStatus",
+  // Take all enum values (NOT_COMPLETED, IN_PROGRESS, COMPLETED)
   members: Object.values(CompletitionStatus),
   description: "A list of possible completition statuses",
 })
@@ -91,7 +92,7 @@ const TodoMutation = extendType({
           toEdit.completed = completed
         }
         if (completitionStatus !== null && completitionStatus !== undefined) {
-          // Safe cast, the "COMPLETED" | "IN_PROGRESS" | "NOT_COMPLETED" Union is compatible with the enum
+          // Safe cast, the "COMPLETED" | "IN_PROGRESS" | "NOT_COMPLETED" Union is compatible with the CompletitionStatus enum
           toEdit.completitionStatus = completitionStatus as CompletitionStatus
         }
         toEdit = await toEdit.save()
@@ -113,6 +114,10 @@ const TodoMutation = extendType({
         if (toRemove === null) {
           throw new Error(`Todo with id ${id} not found`)
         }
+        await pubsub.publish({
+          topic: "TODO_CHANGED",
+          payload: toRemove,
+        })
         toRemove = await toRemove.deleteOne()
         return "Removed todo successfully"
       },

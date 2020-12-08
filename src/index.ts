@@ -55,39 +55,8 @@ const main = async () => {
     subscription: true,
     graphiql: "playground",
     prefix: config.app.apiPrefix,
-  })
-
-  // Login route
-  app.post("/login", (request, reply) => {
-    const { email, password } = request.body as any
-
-    if (password === "password") {
-      request.session.authenticated = true
-      reply.send({ authenticated: true })
-    } else {
-      reply.send({ error: true, message: "Wrong password, try password" })
-    }
-  })
-
-  // Get session route
-  app.get("/session", (request, reply) => {
-    reply.send({ ...request.session })
-  })
-
-  // Logout route
-  app.get("/logout", (request, reply) => {
-    if (request.session.authenticated) {
-      request.destroySession((err) => {
-        if (err) {
-          reply.status(500)
-          reply.send("Internal Server Error")
-        } else {
-          reply.send({ message: "Logged out" })
-        }
-      })
-    } else {
-      reply.send({ error: true, message: "You're not logged in" })
-    }
+    // Expose request and reply objects in context
+    context: (request, reply) => ({ request, reply }),
   })
 
   await app.listen(config.app.port, "0.0.0.0")

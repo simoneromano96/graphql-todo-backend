@@ -40,12 +40,12 @@ const TodoQuery = extendType({
   type: "Query",
   definition(t) {
     t.field("allTodos", {
-      type: list(Todo),
+      type: list(nonNull(Todo)),
       description: "Fetch all todos (completed or not)",
       resolve: async (_root, _args, _ctx) => await todoModel.find(),
     })
     t.field("allActiveTodos", {
-      type: list(Todo),
+      type: list(nonNull(Todo)),
       description: "Fetch all uncompleted todos",
       resolve: async (_root, _args, _ctx) => await todoModel.find({ completed: false }),
     })
@@ -56,7 +56,7 @@ const TodoMutation = extendType({
   type: "Mutation",
   definition(t) {
     t.field("newTodo", {
-      type: Todo,
+      type: nonNull(Todo),
       description: "Add a new todo",
       args: {
         description: nonNull(stringArg({ description: "Description of the new todo" })),
@@ -71,7 +71,7 @@ const TodoMutation = extendType({
       },
     })
     t.field("editTodo", {
-      type: Todo,
+      type: nonNull(Todo),
       description: "Edits a todo",
       args: {
         id: nonNull(stringArg({ description: "The ID of the Todo to edit" })),
@@ -123,7 +123,7 @@ const TodoSubscription = subscriptionField("Tod", {
   type: nonNull(Todo),
   description: "React to a Todo mutation",
   subscribe: async (_root, _args, { pubsub }) => await pubsub.subscribe("TODO_CHANGED"),
-  resolve: async (payload: TodoInterface) => payload,
+  resolve: async (payload) => payload,
 })
 
 export { TodoQuery, TodoMutation, TodoSubscription }

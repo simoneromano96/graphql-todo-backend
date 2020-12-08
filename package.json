@@ -21,6 +21,7 @@
   "homepage": "https://github.com/simoneromano96/graphql-todo-backend/blob/main/README.md",
   "dependencies": {
     "@nexus/schema": "^0.19.2",
+    "argon2": "^0.27.0",
     "connect-redis": "^5.0.0",
     "fastify": "3.8.0",
     "fastify-cookie": "^4.1.1",

@@ -10,11 +10,11 @@ import {
   subscriptionField,
 } from "@nexus/schema"
 
-import { todoModel, Todo as TodoInterface } from "../models/todo"
+import { todoModel, Todo as TodoInterface, CompletitionStatus } from "../models/todo"
 
 const completitionStatuses = enumType({
   name: "CompletitionStatus",
-  members: ["NOT_COMPLETED", "IN_PROGRESS", "COMPLETED"],
+  members: Object.values(CompletitionStatus),
   description: "A list of possible completition statuses",
 })
 
@@ -91,7 +91,8 @@ const TodoMutation = extendType({
           toEdit.completed = completed
         }
         if (completitionStatus !== null && completitionStatus !== undefined) {
-          toEdit.completitionStatus = completitionStatus
+          // Safe cast, the "COMPLETED" | "IN_PROGRESS" | "NOT_COMPLETED" Union is compatible with the enum
+          toEdit.completitionStatus = completitionStatus as CompletitionStatus
         }
         toEdit = await toEdit.save()
         await pubsub.publish({

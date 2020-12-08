@@ -1,9 +1,9 @@
 import { Schema, model, Document } from "mongoose"
 
 enum CompletitionStatus {
-  "NOT_COMPLETED", // 0
-  "IN_PROGRESS", // 1
-  "COMPLETED", // 2
+  NotCompleted = "NOT_COMPLETED",
+  InProgress = "IN_PROGRESS",
+  Completed = "COMPLETED",
 }
 
 interface Todo {
@@ -25,8 +25,9 @@ const todoSchema = new Schema(
     },
     completitionStatus: {
       type: String,
-      default: "NOT_COMPLETED",
-      enum: ["NOT_COMPLETED", "IN_PROGRESS", "COMPLETED"],
+      default: CompletitionStatus.NotCompleted,
+      // Produces: [CompletitionStatus.NotCompleted, CompletitionStatus.InProgress, CompletitionStatus.Completed],
+      enum: Object.values(CompletitionStatus),
     },
   },
   { timestamps: true },
@@ -34,4 +35,4 @@ const todoSchema = new Schema(
 
 const todoModel = model<TodoDocument>("Todo", todoSchema)
 
-export { Todo, todoModel }
+export { Todo, todoModel, CompletitionStatus }

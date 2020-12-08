@@ -10,7 +10,7 @@ import {
   subscriptionField,
 } from "@nexus/schema"
 
-import { todoModel, CompletitionStatus } from "../models/todo"
+import { todoModel, Todo as ITodo, CompletitionStatus } from "../models/todo"
 
 const completitionStatuses = enumType({
   name: "CompletitionStatus",
@@ -129,7 +129,7 @@ const TodoSubscription = subscriptionField("Tod", {
   type: nonNull(Todo),
   description: "React to a Todo mutation",
   subscribe: async (_root, _args, { pubsub }) => await pubsub.subscribe("TODO_CHANGED"),
-  resolve: async (payload) => payload,
+  resolve: async (payload: ITodo) => payload,
 })
 
 export { TodoQuery, TodoMutation, TodoSubscription }

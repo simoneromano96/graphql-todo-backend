@@ -30,6 +30,7 @@ const main = async () => {
 
   app.register(cors, {
     origin: config.app.cors.origin,
+    credentials: true,
   })
 
   app.register(fastifyCookie)

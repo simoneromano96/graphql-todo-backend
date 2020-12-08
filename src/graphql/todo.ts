@@ -32,8 +32,6 @@ const Todo = objectType({
       type: completitionStatuses,
       description: "The current completition status of the Todo",
     })
-    // t.dateTime("createdAt"),
-    // t.dateTime("updatedAt"),
   },
 })
 

@@ -2,6 +2,9 @@ import Fastify from "fastify"
 // Security
 import cors from "fastify-cors"
 import helmet from "fastify-helmet"
+// Session
+import cookie from "fastify-cookie"
+import session from "fastify-session"
 
 import mercurius from "mercurius"
 import mongoose from "mongoose"
@@ -20,6 +23,11 @@ const main = async () => {
   })
 
   const app = Fastify()
+
+  app.register(cookie)
+  app.register(session, {
+    secret: "FMXukWNkBZ9pfS6tcyWCQdwd1JBbzE5l",
+  })
 
   app.register(helmet)
 

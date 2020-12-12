@@ -5,6 +5,9 @@ import helmet from "fastify-helmet"
 // Session
 import cookie from "fastify-cookie"
 import session from "fastify-session"
+// Redis
+import RedisClient from "ioredis"
+import connectRedis from "connect-redis"
 
 import mercurius from "mercurius"
 import mongoose from "mongoose"
@@ -13,6 +16,10 @@ import { schema } from "./schema"
 import config from "./config"
 
 const main = async () => {
+  // Create a new redis client
+  const redisClient = new RedisClient()
+  const RedisStore = connectRedis(session as any)
+
   // DEBUG mode, this will show the queries to the db
   mongoose.set("debug", true)
 
@@ -24,16 +31,26 @@ const main = async () => {
 
   const app = Fastify()
 
-  app.register(cookie)
-  app.register(session, {
-    secret: "FMXukWNkBZ9pfS6tcyWCQdwd1JBbzE5l",
-  })
-
   app.register(helmet)
 
   app.register(cors, {
     origin: config.app.cors.origin,
     credentials: true,
+  })
+
+  app.register(cookie)
+  app.register(session, {
+    secret: "FMXukWNkBZ9pfS6tcyWCQdwd1JBbzE5l",
+    store: new RedisStore({
+      host: "localhost",
+      port: 6379,
+      client: redisClient,
+      ttl: 600,
+    }),
+    cookieName: "sessionId",
+    cookie: {
+      domain: "localhost",
+    }
   })
 
   app.register(mercurius, {

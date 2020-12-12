@@ -1,5 +1,7 @@
 import Fastify from "fastify"
+// Security
 import cors from "fastify-cors"
+import helmet from "fastify-helmet"
 
 import mercurius from "mercurius"
 import mongoose from "mongoose"
@@ -18,6 +20,8 @@ const main = async () => {
   })
 
   const app = Fastify()
+
+  app.register(helmet)
 
   app.register(cors, {
     origin: config.app.cors.origin,

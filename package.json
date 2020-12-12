@@ -26,6 +26,7 @@
     "fastify": "3.9.1",
     "fastify-cookie": "^4.1.1",
     "fastify-cors": "^5.0.0",
+    "fastify-helmet": "^5.0.3",
     "fastify-session": "^5.2.1",
     "graphql-scalars": "^1.6.1",
     "ioredis": "^4.19.2",

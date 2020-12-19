@@ -39,4 +39,4 @@ const todoSchema = new Schema(
 
 const todoModel = model<TodoDocument>("todo", todoSchema)
 
-export { Todo, todoModel, CompletitionStatus, todoSchema }
+export { Todo, todoModel, CompletitionStatus, todoSchema, TodoDocument }

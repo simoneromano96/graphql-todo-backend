@@ -1,6 +1,26 @@
-import { arg, booleanArg, enumType, extendType, list, nonNull, objectType, stringArg, subscriptionField } from "nexus"
+import {
+  arg,
+  booleanArg,
+  enumType,
+  extendType,
+  list,
+  nonNull,
+  objectType,
+  stringArg,
+  subscriptionField,
+} from "nexus"
 
 import { todoModel, Todo as ITodo, CompletitionStatus } from "../models/todo"
+import { userModel } from "../models/user"
+
+const getUserFromSession = async (session: any) => {
+  const userId = session.user._id
+  const user = await userModel.findById(userId)
+  if (!user) {
+    throw new Error("Login first! You fucker")
+  }
+  return user
+}
 
 const completitionStatuses = enumType({
   name: "CompletitionStatus",
@@ -15,7 +35,10 @@ const Todo = objectType({
   definition(t) {
     t.string("id", { description: "The unique identifier of the Todo" })
     t.string("description", { description: "The Todo description" })
-    t.boolean("completed", { description: "If the todo has been completed" })
+    t.boolean("completed", {
+      description: "If the todo has been completed",
+      deprecation: "This field has been deprecated in favour of completitionStatus",
+    })
     t.field("createdAt", { type: "DateTime", description: "When the Todo has been created" })
     t.field("updatedAt", { type: "DateTime", description: "When the Todo has been updated" })
     t.field("completitionStatus", {
@@ -31,12 +54,38 @@ const TodoQuery = extendType({
     t.field("allTodos", {
       type: list(nonNull(Todo)),
       description: "Fetch all todos (completed or not)",
-      resolve: async (_root, _args, _ctx) => await todoModel.find(),
+      resolve: async (_root, _args, { request }) => {
+        const user = await getUserFromSession(request.session)
+        await user.populate("todos").execPopulate()
+        return user.todos
+      },
     })
     t.field("allActiveTodos", {
       type: list(nonNull(Todo)),
       description: "Fetch all uncompleted todos",
-      resolve: async (_root, _args, _ctx) => await todoModel.find({ completed: false }),
+      deprecation: "This query is using completed field, which is deprecated, use findTodos",
+      resolve: async (_root, _args, { request }) => {
+        const user = await getUserFromSession(request.session)
+        await user.populate("todos").execPopulate()
+        return user.todos.filter(({ completed }) => completed === false)
+      },
+    })
+    t.field("findTodos", {
+      type: list(nonNull(Todo)),
+      description: "Fetches all todos from a user with the specified arguments",
+      args: {
+        completitionStatus: arg({
+          type: completitionStatuses,
+          description: "The new completition status",
+        }),
+      },
+      resolve: async (_root, { completitionStatus: argCompletitionStatus }, { request }) => {
+        const user = await getUserFromSession(request.session)
+        await user.populate("todos").execPopulate()
+        return user.todos.filter(
+          ({ completitionStatus }) => completitionStatus === argCompletitionStatus,
+        )
+      },
     })
   },
 })
@@ -50,13 +99,20 @@ const TodoMutation = extendType({
       args: {
         description: nonNull(stringArg({ description: "Description of the new todo" })),
       },
-      resolve: async (_root, { description }, { pubsub }) => {
+      resolve: async (_root, { description }, { pubsub, request }) => {
+        const user = await getUserFromSession(request.session)
         const newTodo = new todoModel({ description })
+        await newTodo.save()
+
+        user.todos.push(newTodo)
+        await user.save()
+
         await pubsub.publish({
           topic: "TODO_CHANGED",
           payload: newTodo,
         })
-        return await newTodo.save()
+
+        return newTodo
       },
     })
     t.field("editTodo", {
@@ -66,7 +122,10 @@ const TodoMutation = extendType({
         id: nonNull(stringArg({ description: "The ID of the Todo to edit" })),
         description: stringArg({ description: "The new description of the edited todo" }),
         completed: booleanArg({ description: "The new completed status of the edited todo" }),
-        completitionStatus: arg({ type: completitionStatuses, description: "The new completition status" }),
+        completitionStatus: arg({
+          type: completitionStatuses,
+          description: "The new completition status",
+        }),
       },
       resolve: async (_root, { id, description, completed, completitionStatus }, { pubsub }) => {
         let toEdit = await todoModel.findById(id)

@@ -1,8 +1,10 @@
 import { Schema, model, Document } from "mongoose"
+import { TodoDocument, todoModel } from "./todo"
 
 interface User {
   username: string
   password: string
+  todos: TodoDocument[]
 }
 
 interface UserDocument extends User, Document {}
@@ -19,6 +21,12 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
+    todos: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: todoModel,
+      },
+    ],
   },
   { timestamps: true },
 )

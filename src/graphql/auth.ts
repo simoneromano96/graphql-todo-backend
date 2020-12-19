@@ -1,42 +1,67 @@
-import { mutationField, nonNull, queryField, stringArg } from "nexus"
+import { hash, verify } from "argon2"
+import { mutationField, nonNull, objectType, queryField, stringArg } from "nexus"
+
+import config from "../config"
+import { userModel } from "../models/user"
+
+const User = objectType({
+  name: "User",
+  description: "A user object",
+  definition(t) {
+    t.string("username", { description: "The user's username" })
+  },
+})
 
 const meQuery = queryField("me", {
-  type: "String",
+  type: User,
   description: "Gives back logged user info",
   resolve: async (_root, _args, { request }) => {
     if (!request.session.user) {
       throw new Error("User not logged in")
     }
-    const fullName = `${request.session.user.firstName} ${request.session.user.lastName}`
-    return fullName
+    return request.session.user
   },
 })
 
 const loginMutation = mutationField("login", {
-  type: "String",
+  type: User,
   description: "Login a User with username and password",
   args: {
     username: nonNull(stringArg({ description: "The user's username" })),
     password: nonNull(stringArg({ description: "The user's password" })),
   },
   resolve: async (_root, { username, password }, { request }) => {
-    // TODO: figure out why I keep getting hacked
-    if (username === "username" && password === "password") {
-      request.session.user = {
-        username,
-        password,
-        firstName: "Dumbo",
-        lastName: "Very Dumbo",
-      }
-      return `${username} Has been logged in`
-    } else {
-      throw new Error("Try username and password")
+    const user = await userModel.findOne({ username })
+    if (!user) {
+      throw new Error(`User with username: ${username} not found!`)
     }
+    const matches = await verify(user.password, password)
+    if (!matches) {
+      throw new Error("Check your password again!")
+    }
+    request.session.user = user.toObject()
+    return user
+  },
+})
+
+const signupMutation = mutationField("signup", {
+  type: User,
+  description: "Signup a new User with username and password",
+  args: {
+    username: nonNull(stringArg({ description: "The new user's username" })),
+    password: nonNull(stringArg({ description: "The new user's password" })),
+  },
+  resolve: async (_root, { username, password }, { request }) => {
+    const hashedPassword = await hash(password, config.app.hash)
+    const newUser = new userModel({ username, password: hashedPassword })
+    await newUser.save()
+    request.session.user = newUser.toObject()
+    return newUser
   },
 })
 
 const AuthQuery = [meQuery]
 
-const AuthMutation = [loginMutation]
+const AuthMutation = [signupMutation, loginMutation]
 
 export { AuthQuery, AuthMutation }

@@ -37,6 +37,6 @@ const todoSchema = new Schema(
   { timestamps: true },
 )
 
-const todoModel = model<TodoDocument>("Todo", todoSchema)
+const todoModel = model<TodoDocument>("todo", todoSchema)
 
 export { Todo, todoModel, CompletitionStatus, todoSchema }

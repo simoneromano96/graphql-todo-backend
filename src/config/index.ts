@@ -1,4 +1,4 @@
-// import { argon2id } from "argon2"
+import { argon2id } from "argon2"
 
 export default {
   app: {
@@ -20,8 +20,8 @@ export default {
     cors: {
       origin: process.env.APP_CORS_ORIGIN ?? "*",
     },
-    // hash: {
-    //   type: argon2id,
-    // },
+    hash: {
+      type: argon2id,
+    },
   },
 }

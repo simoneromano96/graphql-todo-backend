@@ -1,4 +1,4 @@
-import { mutationField, nonNull, queryField, stringArg } from "@nexus/schema"
+import { mutationField, nonNull, queryField, stringArg } from "nexus"
 
 const meQuery = queryField("me", {
   type: "String",

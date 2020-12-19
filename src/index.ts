@@ -40,17 +40,19 @@ const main = async () => {
 
   app.register(cookie)
   app.register(session, {
-    secret: "FMXukWNkBZ9pfS6tcyWCQdwd1JBbzE5l",
+    secret: config.app.session.secret,
     store: new RedisStore({
-      host: "localhost",
-      port: 6379,
+      host: config.app.redis.host,
+      port: config.app.redis.port,
       client: redisClient,
       ttl: 600,
     }),
-    cookieName: "sessionId",
+    cookieName: "sesId",
     cookie: {
-      domain: "localhost",
-    }
+      secure: config.app.cookie.secure,
+      httpOnly: config.app.cookie.httpOnly,
+      domain: config.app.cookie.domain,
+    },
   })
 
   app.register(mercurius, {

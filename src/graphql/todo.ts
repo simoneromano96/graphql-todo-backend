@@ -1,14 +1,4 @@
-import {
-  arg,
-  booleanArg,
-  enumType,
-  extendType,
-  list,
-  nonNull,
-  objectType,
-  stringArg,
-  subscriptionField,
-} from "@nexus/schema"
+import { arg, booleanArg, enumType, extendType, list, nonNull, objectType, stringArg, subscriptionField } from "nexus"
 
 import { todoModel, Todo as ITodo, CompletitionStatus } from "../models/todo"
 

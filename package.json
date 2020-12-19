@@ -20,7 +20,6 @@
   },
   "homepage": "https://github.com/simoneromano96/graphql-todo-backend/blob/main/README.md",
   "dependencies": {
-    "@nexus/schema": "^0.19.2",
     "argon2": "^0.27.0",
     "connect-redis": "^5.0.0",
     "fastify": "3.9.1",
@@ -31,7 +30,8 @@
     "graphql-scalars": "^1.6.1",
     "ioredis": "^4.19.2",
     "mercurius": "^6.5.0",
-    "mongoose": "^5.11.5"
+    "mongoose": "^5.11.5",
+    "nexus": "^1.0.0"
   },
   "devDependencies": {
     "@types/connect-redis": "^0.0.15",

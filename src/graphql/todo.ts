@@ -121,23 +121,32 @@ const TodoMutation = extendType({
       args: {
         id: nonNull(stringArg({ description: "The ID of the Todo to edit" })),
         description: stringArg({ description: "The new description of the edited todo" }),
-        completed: booleanArg({ description: "The new completed status of the edited todo" }),
+        // completed: booleanArg({ description: "The new completed status of the edited todo" }),
         completitionStatus: arg({
           type: completitionStatuses,
           description: "The new completition status",
         }),
       },
-      resolve: async (_root, { id, description, completed, completitionStatus }, { pubsub }) => {
+      resolve: async (_root, { id, description, completitionStatus }, { pubsub, request }) => {
+        const user = await getUserFromSession(request.session)
+        await user.populate("todos").execPopulate()
+
         let toEdit = await todoModel.findById(id)
         if (toEdit === null) {
           throw new Error(`Todo with id ${id} not found`)
         }
+
+        const hasTodo = user.todos.find(({ id }) => id === toEdit?.id)
+        if (!hasTodo) {
+          throw new Error("You cannot edit another person's TODO, you motherfucker!")
+        }
+
         if (description !== null && description !== undefined) {
           toEdit.description = description
         }
-        if (completed !== null && completed !== undefined) {
-          toEdit.completed = completed
-        }
+        // if (completed !== null && completed !== undefined) {
+        //   toEdit.completed = completed
+        // }
         if (completitionStatus !== null && completitionStatus !== undefined) {
           // Safe cast, the "COMPLETED" | "IN_PROGRESS" | "NOT_COMPLETED" Union is compatible with the CompletitionStatus enum
           toEdit.completitionStatus = completitionStatus as CompletitionStatus
@@ -156,11 +165,20 @@ const TodoMutation = extendType({
       args: {
         id: nonNull(stringArg({ description: "The ID of the Todo to delete" })),
       },
-      resolve: async (_root, { id }, { pubsub }) => {
+      resolve: async (_root, { id }, { pubsub, request }) => {
+        const user = await getUserFromSession(request.session)
+        await user.populate("todos").execPopulate()
+
         let toRemove = await todoModel.findById(id)
         if (toRemove === null) {
           throw new Error(`Todo with id ${id} not found`)
         }
+
+        const hasTodo = user.todos.find(({ id }) => id === toRemove?.id)
+        if (!hasTodo) {
+          throw new Error("You cannot delete another person's TODO, you motherfucker!")
+        }
+
         await pubsub.publish({
           topic: "TODO_CHANGED",
           payload: toRemove,

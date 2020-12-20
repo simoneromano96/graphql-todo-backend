@@ -17,7 +17,10 @@ import config from "./config"
 
 const main = async () => {
   // Create a new redis client
-  const redisClient = new RedisClient()
+  const redisClient = new RedisClient({
+    host: config.app.redis.host,
+    port: config.app.redis.port,
+  })
   const RedisStore = connectRedis(session as any)
 
   // DEBUG mode, this will show the queries to the db
@@ -42,8 +45,8 @@ const main = async () => {
   app.register(session, {
     secret: config.app.session.secret,
     store: new RedisStore({
-      host: config.app.redis.host,
-      port: config.app.redis.port,
+      // host: config.app.redis.host,
+      // port: config.app.redis.port,
       client: redisClient,
       ttl: 600,
     }),

@@ -1,5 +1,6 @@
+import { makeSchema } from "nexus"
 import { join } from "path"
-import { makeSchema } from "@nexus/schema"
+
 import { TodoMutation, TodoQuery, TodoSubscription } from "./graphql/todo"
 import { AuthMutation, AuthQuery } from "./graphql/auth"
 

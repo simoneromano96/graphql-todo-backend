@@ -1,10 +1,13 @@
 import Fastify from "fastify"
+// Security
 import cors from "fastify-cors"
-// SESSION
-import fastifyCookie from "fastify-cookie"
-import fastifySession from "fastify-session"
+import helmet from "fastify-helmet"
+// Session
+import cookie from "fastify-cookie"
+import session from "fastify-session"
+// Redis
+import RedisClient from "ioredis"
 import connectRedis from "connect-redis"
-import Redis from "ioredis"
 
 import mercurius from "mercurius"
 import mongoose from "mongoose"
@@ -13,9 +16,9 @@ import { schema } from "./schema"
 import config from "./config"
 
 const main = async () => {
-  // Init redis
-  const RedisClient = new Redis()
-  const RedisStore = connectRedis(fastifySession as any)
+  // Create a new redis client
+  const redisClient = new RedisClient()
+  const RedisStore = connectRedis(session as any)
 
   // DEBUG mode, this will show the queries to the db
   mongoose.set("debug", true)
@@ -28,18 +31,20 @@ const main = async () => {
 
   const app = Fastify()
 
+  app.register(helmet)
+
   app.register(cors, {
     origin: config.app.cors.origin,
     credentials: true,
   })
 
-  app.register(fastifyCookie)
-  app.register(fastifySession, {
+  app.register(cookie)
+  app.register(session, {
     secret: config.app.session.secret,
     store: new RedisStore({
       host: config.app.redis.host,
       port: config.app.redis.port,
-      client: RedisClient,
+      client: redisClient,
       ttl: 600,
     }),
     cookieName: "sesId",

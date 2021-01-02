@@ -26,3 +26,8 @@ services:
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: example
+
+  redis:
+    image: redis
+    ports: 
+      - 6379:6379

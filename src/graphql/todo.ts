@@ -1,14 +1,4 @@
-import {
-  arg,
-  booleanArg,
-  enumType,
-  extendType,
-  list,
-  nonNull,
-  objectType,
-  stringArg,
-  subscriptionField,
-} from "nexus"
+import { arg, booleanArg, enumType, extendType, list, nonNull, objectType, stringArg, subscriptionField } from "nexus"
 
 import { todoModel, Todo as ITodo, CompletitionStatus } from "../models/todo"
 import { userModel } from "../models/user"
@@ -82,9 +72,7 @@ const TodoQuery = extendType({
       resolve: async (_root, { completitionStatus: argCompletitionStatus }, { request }) => {
         const user = await getUserFromSession(request.session)
         await user.populate("todos").execPopulate()
-        return user.todos.filter(
-          ({ completitionStatus }) => completitionStatus === argCompletitionStatus,
-        )
+        return user.todos.filter(({ completitionStatus }) => completitionStatus === argCompletitionStatus)
       },
     })
   },

@@ -4,7 +4,7 @@ import { todoModel, Todo as ITodo, CompletitionStatus } from "../models/todo"
 import { userModel } from "../models/user"
 
 const getUserFromSession = async (session: any) => {
-  const userId = session.user._id
+  const userId = session?.user?._id
   const user = await userModel.findById(userId)
   if (!user) {
     throw new Error("Login first! You fucker")

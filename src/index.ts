@@ -61,7 +61,7 @@ const main = async () => {
   app.register(mercurius, {
     schema,
     subscription: true,
-    graphiql: "playground",
+    // graphiql: "playground",
     prefix: config.app.apiPrefix,
     // Expose request and reply objects in context
     context: (request, reply) => ({ request, reply }),
